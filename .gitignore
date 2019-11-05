@@ -1,2 +1,5 @@
 *.zip
 setup.py
+data_formatting.py
+__pycache__/
+
