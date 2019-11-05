@@ -11,7 +11,9 @@ class CSVReader(object):
 
 def createCSVReader(type):
     '''server side CSVReader caller'''
-    if type == "TwoFieldsCSV":
+    if type == "OneFieldsCSV":
+        return getOneValuesCSVData
+    elif type == "TwoFieldsCSV":
         return getTwoValuesCSVData
     elif type == "ThreeFieldsCSV":
         return getThreeValuesCSVData
@@ -45,6 +47,14 @@ def readCSVData(filepath,filename) -> list:
     csv_file.close()
 
     return (fieldNames,csv_data)
+
+def getTwoValuesCSVData(filepath,filename):
+
+    fieldNames,csvData = readCSVData(filepath,filename)
+
+    value1 = fieldNames[0]
+
+    return (value1,csvData)
 
 def getTwoValuesCSVData(filepath,filename):
 
