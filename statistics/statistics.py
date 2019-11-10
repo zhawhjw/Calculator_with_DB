@@ -53,99 +53,7 @@ class Statistics(Calculator):
         super().__init__()
         result = 0
 
-    def mode(self, data: list):
-        add = self.add
-
-        count_set = {}
-
-        mode = max(set(data), key=data.count)
-
-    def variance(self, data: list):
-        add = self.add
-        subtract = self.subtract
-        divide = self.divide
-        sqr = self.sqr
-        mean = self.mean
-
-        data_size = len(data)
-
-        diff_sqr_summation = 0
-        mn = mean(data)
-        for e in data:
-            diff = subtract(mn, e)
-            diff_sqr = sqr(diff)
-            diff_sqr_summation = add(diff_sqr_summation, diff_sqr)
-
-        data_variance = divide(data_size, diff_sqr_summation)
-
-        self.result = data_variance
-        return self.result
-
-    def stddev(self, data: list):
-        """returns the standard deviation of data"""
-        variance = self.variance
-        sqrt = self.sqrt
-
-        data_variance = variance(data)
-        data_stddev= sqrt(data_variance)
-
-        self.result = data_stddev
-        return self.result
-
-    def mean(self, data: list):
-        """define function built in class 'Calculator' """
-        divide = self.divide
-        '''define required variables '''
-        data_size = len(data)
-
-        summation = sum(data)
-        data_mean = divide(data_size, summation)
-
-        self.result = data_mean
-        return self.result
-
-    def zscore(self, value, data: list):
-        divide = self.divide
-        subtract = self.subtract
-        mean = self.mean
-        stddev = self.stddev
-
-        data_mean = mean(data)
-        data_stddev = stddev(data)
-        data_mdev = subtract(data_mean,value)
-
-        data_zscore = divide(data_stddev, data_mdev)
-
-        self.result = data_zscore
-        return self.result
-
-    def standardizedscore(self, value, data:list ):
-        zscore = self.zscore
-        self.result = zscore(value,data)
-        return self.result
-
-    def proportion(self, data: list):
-        subtract = self.subtract
-        divide = self.divide
-
-        sorted_data = sorted(data)
-
-        p = []
-
-        data_min = sorted_data[0]
-        data_max = sorted_data[-1]
-
-        total_diff = subtract(data_min, data_max)
-
-        for d in data:
-            proportion_diff = subtract(min, d)
-            data_proportion = divide(total_diff, proportion_diff)
-            p.append(data_proportion)
-
-        self.result = p
-        return self.result
-
-    def covariance(self, data1: list , data2: list):
+    def covariance(self, data1: list, data2: list):
         add = self.add
         divide = self.divide
         subtract = self.subtract
@@ -155,7 +63,6 @@ class Statistics(Calculator):
 
         data1_size = len(data1)
         data2_size = len(data2)
-
 
         if data1_size != data2_size:
             self.result = None
@@ -181,24 +88,36 @@ class Statistics(Calculator):
             self.result = data_covariance
             return self.result
 
-    def pcc(self, data1:list, data2:list):
-        divide = self.divide
-        multiply = self.multiply
-
-        covariance = self.covariance
+    def sem(self, data: list):
         stddev = self.stddev
+        sqrt = self.sqrt
+        divide = self.divide
 
-        data_covariance = covariance(data1,data2)
-        data1_stddev = stddev(data1)
-        data2_stddev = stddev(data2)
+        data_size = len(data)
+        data_stddev = stddev(data)
 
-        product_data_stddev = multiply(data1_stddev, data2_stddev)
+        data_size_sqrt = sqrt(data_size)
 
-        data_ppc = divide(product_data_stddev, data_covariance)
-        self.result = data_ppc
+        data_sem = divide(data_size_sqrt, data_stddev)
+        self.result = data_sem
+        return self.result
+
+    def mean(self, data: list):
+        #Task 1
+
+        """define function built in class 'Calculator' """
+        divide = self.divide
+        '''define required variables '''
+        data_size = len(data)
+
+        summation = sum(data)
+        data_mean = divide(data_size, summation)
+
+        self.result = data_mean
         return self.result
 
     def median(self, data: list):
+        #Task 2
 
         divide = self.divide
         subtract = self.subtract
@@ -234,19 +153,115 @@ class Statistics(Calculator):
 
         return self.result
 
-    def sem(self, data: list):
-        stddev = self.stddev
+    def mode(self, data: list):
+        #Task 3 (NOT FINISH)
+        add = self.add
+
+        count_set = {}
+
+        mode = max(set(data), key=data.count)
+
+    def stddev(self, data: list):
+        #Task 4
+        """returns the standard deviation of data"""
+        variance = self.variance
         sqrt = self.sqrt
-        divide = self.divide
 
-        data_size = len(data)
-        data_stddev = stddev(data)
+        data_variance = variance(data)
+        data_stddev= sqrt(data_variance)
 
-        data_size_sqrt = sqrt(data_size)
-
-        data_sem = divide(data_size_sqrt, data_stddev)
-        self.result = data_sem
+        self.result = data_stddev
         return self.result
 
-    def cdi(self,data:list, cdl = 0.95 ):
+    def zscore(self, value, data: list):
+        #Task 6
+        divide = self.divide
+        subtract = self.subtract
+        mean = self.mean
+        stddev = self.stddev
+
+        data_mean = mean(data)
+        data_stddev = stddev(data)
+        data_mdev = subtract(data_mean,value)
+
+        data_zscore = divide(data_stddev, data_mdev)
+
+        self.result = data_zscore
+        return self.result
+
+    def standardizedscore(self, value, data:list ):
+        #Task 7
+        zscore = self.zscore
+        self.result = zscore(value,data)
+        return self.result
+
+    def pcc(self, data1:list, data2:list):
+        #Task 8
+        divide = self.divide
+        multiply = self.multiply
+
+        covariance = self.covariance
+        stddev = self.stddev
+
+        data_covariance = covariance(data1,data2)
+        data1_stddev = stddev(data1)
+        data2_stddev = stddev(data2)
+
+        product_data_stddev = multiply(data1_stddev, data2_stddev)
+
+        data_ppc = divide(product_data_stddev, data_covariance)
+        self.result = data_ppc
+        return self.result
+
+
+    def variance(self, data: list):
+        #Task 10
+        add = self.add
+        subtract = self.subtract
+        divide = self.divide
+        sqr = self.sqr
+        mean = self.mean
+
+        data_size = len(data)
+
+        diff_sqr_summation = 0
+        mn = mean(data)
+        for e in data:
+            diff = subtract(mn, e)
+            diff_sqr = sqr(diff)
+            diff_sqr_summation = add(diff_sqr_summation, diff_sqr)
+
+        data_variance = divide(data_size, diff_sqr_summation)
+
+        self.result = data_variance
+        return self.result
+
+
+
+
+    def proportion(self, data: list):
+        #Task 12
+        subtract = self.subtract
+        divide = self.divide
+
+        sorted_data = sorted(data)
+
+        p = []
+
+        data_min = sorted_data[0]
+        data_max = sorted_data[-1]
+
+        total_diff = subtract(data_min, data_max)
+
+        for d in data:
+            proportion_diff = subtract(min, d)
+            data_proportion = divide(total_diff, proportion_diff)
+            p.append(data_proportion)
+
+        self.result = p
+        return self.result
+
+
+
+    #def cdi(self,data:list, cdl = 0.95 ):
 
