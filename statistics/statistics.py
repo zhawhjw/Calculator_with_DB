@@ -1,7 +1,6 @@
 from calculator.calculator import Calculator
 import math
-
-
+import collections
 
 
 # def getMean(data):
@@ -22,28 +21,24 @@ import math
 #        median = sorted_data[len(data)//2]
 #
 #    return median
-def frequencyCount(data):
-    # Counts the number of each type of example in a dataset.
-    counts = {}  # a dictionary of label -> count.
-    for d in data:
-        # Assume the label is the one value of current column
-        label = d
-        if label not in counts:
-            counts[label] = 0
-        counts[label] += 1
-    return counts
 
-def reverseSortDictByValue(dictionary):
-    sorted_dictionary = sorted(dictionary.items(), key=lambda kv: kv[1], reverse=True)
-    frequent_tuple = sorted_dictionary[0]
-
-    value = frequent_tuple[0]
-    frequency = frequent_tuple[1]
-    if frequency > 1:
-        return value
-    elif frequency == 1:
-
-    return sorted_dictionary
+def frequencyTable(data):
+    """
+    This piece is based on Python mode function
+    :param data: data list
+    :return: frequency table
+    """
+    # Generate a table of sorted (value, frequency) pairs.
+    table = collections.Counter(iter(data)).most_common()
+    if not table:
+        return table
+    # Extract the values with the highest frequency.
+    maxfreq = table[0][1]
+    for i in range(1, len(table)):
+        if table[i][1] != maxfreq:
+            table = table[:i]
+            break
+    return table
 
 
 class Statistics(Calculator):
@@ -102,7 +97,7 @@ class Statistics(Calculator):
         self.result = data_sem
         return self.result
 
-    def cdf(self, value: float, mean = 0, stddev = 1):
+    def cdf(self, value: float, mean=0, stddev=1):
         e = math.e
         pi = math.pi
 
@@ -114,24 +109,21 @@ class Statistics(Calculator):
 
         pow = math.pow
 
-        base = multiply(2,pi)
+        base = multiply(2, pi)
         base = sqrt(base)
         base = multiply(base, stddev)
         base = divide(base, 1)
         base = multiply(base, e)
 
-
         p = subtract(mean, value)
-        p = divide(stddev,p)
+        p = divide(stddev, p)
         p = sqr(p)
         p = multiply(0.5, p)
         p = -p
 
-        data_cdf = pow(base,p)
+        data_cdf = pow(base, p)
         self.result = data_cdf
         return self.result
-
-
 
     def mean(self, data: list):
         """
@@ -164,7 +156,6 @@ class Statistics(Calculator):
         :param data: data list
         :return: median value
         """
-
 
         divide = self.divide
         subtract = self.subtract
@@ -202,18 +193,28 @@ class Statistics(Calculator):
 
     def mode(self, data: list):
         """
-        Task 3 (NOT FINISH)
+        Task 3
         get the most frequent numbers in data list;
         will return error when all numbers have same frequency
-        :param data:
-        :return:
+        Based on Python mode library
+
+        :param data: data list
+        :return: error or  mode value
         """
 
-        add = self.add
+        table = frequencyTable(data)
+        if len(table) == 1:
+            self.result = table[0][0]
 
-        count_set = {}
+        elif table:
+            print('no unique mode')
+            self.result = None
 
-        mode = max(set(data), key=data.count)
+        else:
+            print('empty data list')
+            self.result = None
+
+        return self.result
 
     def stddev(self, data: list, mode="population"):
         """
@@ -230,13 +231,13 @@ class Statistics(Calculator):
         variance = self.variance
         sqrt = self.sqrt
 
-        data_variance = variance(data,mode)
-        data_stddev= sqrt(data_variance)
+        data_variance = variance(data, mode)
+        data_stddev = sqrt(data_variance)
 
         self.result = data_stddev
         return self.result
 
-    def vp(self, data:list, success_data_count:int):
+    def vp(self, data: list, success_data_count: int):
         """
         Task 5 and 15
 
@@ -284,14 +285,14 @@ class Statistics(Calculator):
 
         data_mean = mean(data)
         data_stddev = stddev(data)
-        data_mdev = subtract(data_mean,value)
+        data_mdev = subtract(data_mean, value)
 
         data_zscore = divide(data_stddev, data_mdev)
 
         self.result = data_zscore
         return self.result
 
-    def standardizedscore(self, value, data:list ):
+    def standardizedscore(self, value, data: list):
         """
         Task 7
         same meaning with z-score
@@ -302,10 +303,10 @@ class Statistics(Calculator):
         """
 
         zscore = self.zscore
-        self.result = zscore(value,data)
+        self.result = zscore(value, data)
         return self.result
 
-    def pcc(self, data1:list, data2:list):
+    def pcc(self, data1: list, data2: list):
         """
         Task 8
         get population correlation coefficient
@@ -321,7 +322,7 @@ class Statistics(Calculator):
         covariance = self.covariance
         stddev = self.stddev
 
-        data_covariance = covariance(data1,data2)
+        data_covariance = covariance(data1, data2)
         data1_stddev = stddev(data1)
         data2_stddev = stddev(data2)
 
@@ -331,7 +332,7 @@ class Statistics(Calculator):
         self.result = data_ppc
         return self.result
 
-    def ci(self, data: list, cl = 0.95):
+    def ci(self, data: list, cl=0.95):
         """
         Task 9
 
@@ -341,18 +342,18 @@ class Statistics(Calculator):
         The constant factor can be looked up from a table, for 95% confidence
         on a reasonable size sample (>=500) 1.96 is used.
         """
-        add=self.add
+        add = self.add
         subtract = self.subtract
         divide = self.divide
         multiply = self.multiply
         sqrt = self.sqrt
 
-        mean=self.mean
-        stddev=self.stddev
+        mean = self.mean
+        stddev = self.stddev
 
         data_mean = mean(data)
         data_size = len(data)
-        data_stddev=stddev(data)
+        data_stddev = stddev(data)
 
         if cl == 0.95:
             cc = 1.96
@@ -366,9 +367,9 @@ class Statistics(Calculator):
 
         data_size_sqrt = sqrt(data_size)
         h = divide(data_size_sqrt, data_stddev)
-        h = multiply(h,cc)
+        h = multiply(h, cc)
 
-        left = subtract(h,data_mean)
+        left = subtract(h, data_mean)
         right = add(h, data_mean)
 
         self.result = [left, right]
@@ -408,7 +409,7 @@ class Statistics(Calculator):
         self.result = data_variance
         return self.result
 
-    def pvalue(self, value, data: list, mode = "one"):
+    def pvalue(self, value, data: list, mode="one"):
         """
         Task 11
         get p-value from z-score
@@ -418,7 +419,7 @@ class Statistics(Calculator):
         :return: p-value on one-tail or two-tail
         """
         subtract = self.subtract
-        multiply= self.multiply
+        multiply = self.multiply
 
         mean = self.mean
         stddev = self.stddev
@@ -434,11 +435,11 @@ class Statistics(Calculator):
         pvalue = subtract(data_cdf, 1)
 
         if mode == "two":
-            pvalue = multiply(pvalue,2)
+            pvalue = multiply(pvalue, 2)
 
         self.result = pvalue
         return self.result
-    
+
     def proportion(self, data: list, success_data_count: int):
         """
         Task 12
@@ -462,5 +463,3 @@ class Statistics(Calculator):
         data_proportion = divide(data_size, success_data_count)
         self.result = data_proportion
         return self.result
-
-
