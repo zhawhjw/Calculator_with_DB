@@ -271,7 +271,7 @@ class Statistics(Calculator):
         """
         Task 6
         get z-score of data list
-        
+
         :param value:
         :param data:
         :return:
@@ -408,14 +408,37 @@ class Statistics(Calculator):
         self.result = data_variance
         return self.result
 
-    def pvalue(self, data:list):
+    def pvalue(self, value, data: list, mode = "one"):
         """
         Task 11
-        get p-value
-        :param data:
-        :return:
+        get p-value from z-score
+        :param mode: "one" or "two"
+        :param value: value in data list that be computed to get p-value
+        :param data: data list
+        :return: p-value on one-tail or two-tail
         """
-        return
+        subtract = self.subtract
+        multiply= self.multiply
+
+        mean = self.mean
+        stddev = self.stddev
+        cdf = self.cdf
+        zscore = self.zscore
+
+        data_mean = mean(data)
+        data_stddev = stddev(data)
+
+        value_zscore = zscore(value)
+        abs_zscore = abs(value_zscore)
+        data_cdf = cdf(abs_zscore, mean=data_mean, stddev=data_stddev)
+        pvalue = subtract(data_cdf, 1)
+
+        if mode == "two":
+            pvalue = multiply(pvalue,2)
+
+        self.result = pvalue
+        return self.result
+    
     def proportion(self, data: list, success_data_count: int):
         """
         Task 12
