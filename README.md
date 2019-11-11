@@ -4,13 +4,21 @@
 ## Population Mean
 Calculate the population mean.
 
+Population mean = μ = ( Σ Xi ) / N
+
 Statistics.mean(data)
 
 data: a list of numbers.
 
 return: the mean of the input list.
 
-
+```python
+numbers = [2, 3, 4, 5, 6, 7]
+statistics = Statistics()
+result = statistics.mean(numbers)
+print(result)
+# 4.5
+```
 
 
 ## Median
@@ -22,16 +30,21 @@ data: a list of numbers.
 
 return: the median of the input list.
 
-```
->>> getMedian([0, 3, 5, 5])
-4.0
-```
-
-```
->>> median([2, 3, 5])
-3
+```python
+numbers = [2, 3, 4, 5, 6, 7]
+statistics = Statistics()
+result = statistics.median(numbers)
+print(result)
+# 4.5
 ```
 
+```python
+numbers = [2, 3, 4, 5, 6, 7, 8]
+statistics = Statistics()
+result = statistics.median(numbers)
+print(result)
+# 5
+```
 ## Mode
 
 
@@ -39,6 +52,8 @@ return: the median of the input list.
 ## Population Standard Deviation
 
 Calculate the population standard deviation.
+
+Population standard deviation = σ = sqrt [ Σ ( Xi - μ )2 / N ]
 
 Statistics.stddev(data)
 
@@ -77,6 +92,8 @@ print(result)
 
 Calculate the standardized-score.
 
+Standardized score = Z = (X - μ) / σ
+
 Input: a value and a list of numbers.
 
 Return: Standardized-score.
@@ -92,6 +109,7 @@ print(result)
 ## Population Correlation Coefficient
 The correlation coefficient of two variables in a data set equals to their covariance divided by the product of their individual standard deviations. It is a normalized measurement of how the two are linearly related.
 
+Population correlation coefficient = ρ = [ 1 / N ] * Σ { [ (Xi - μX) / σx ] * [ (Yi - μY) / σy ] }
 
 Input: a value and a list of numbers.
 
@@ -108,6 +126,8 @@ print(result)
 ## Confidence Interval
 
 ## Population Variance
+
+Population variance = σ2 = Σ ( Xi - μ )2 / N
 
 Input: a list of numbers.
 
@@ -138,6 +158,19 @@ print(result)
 
 ## Sample Mean
 
+Sample mean = x = ( Σ xi ) / n
+
+
 ## Sample Standard Deviation
 
+Sample standard deviation = s = sqrt [ Σ ( xi - x )2 / ( n - 1 ) ]
+
+
 ## Variance of sample proportion
+
+
+
+
+Reference:
+Refer the formulae here:
+[Stat Trek tutorials](https://stattrek.com/statistics/formulas.aspx)
