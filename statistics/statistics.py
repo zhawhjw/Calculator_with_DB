@@ -197,23 +197,22 @@ class Statistics(Calculator):
         get the most frequent numbers in data list;
         will return error when all numbers have same frequency
         Based on Python mode library
-
         :param data: data list
         :return: error or  mode value
         """
+        n = len(data)
 
-        table = frequencyTable(data)
-        if len(table) == 1:
-            self.result = table[0][0]
+        data_cnt = collections.Counter(data)
+        print(data_cnt)
+        get_mode = dict(data_cnt)
+        mode = [k for k, v in get_mode.items() if v == max(list(data_cnt.values()))]
 
-        elif table:
-            print('no unique mode')
-            self.result = None
-
+        if len(mode) == n:
+            get_mode = None
         else:
-            print('empty data list')
-            self.result = None
+            get_mode = list(map(str, mode))
 
+        self.result = get_mode
         return self.result
 
     def stddev(self, data: list, mode="population"):
@@ -429,7 +428,7 @@ class Statistics(Calculator):
         data_mean = mean(data)
         data_stddev = stddev(data)
 
-        value_zscore = zscore(value)
+        value_zscore = zscore(value,data)
         abs_zscore = abs(value_zscore)
         data_cdf = cdf(abs_zscore, mean=data_mean, stddev=data_stddev)
         pvalue = subtract(data_cdf, 1)
@@ -463,3 +462,10 @@ class Statistics(Calculator):
         data_proportion = divide(data_size, success_data_count)
         self.result = data_proportion
         return self.result
+
+if __name__ == '__main__':
+    s = Statistics()
+    data1 = [957, 552, 145, 148, 842, 92, 932, 415, 863, 55, 176, 247]
+
+    data2 = [896, 167, 659, 622, 9, 61, 819, 598, 928, 399, 418, 382]
+    print(s.pcc(data1, data2))
