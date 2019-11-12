@@ -97,7 +97,7 @@ class Statistics(Calculator):
         self.result = data_sem
         return self.result
 
-    def cdf(self, value: float, mean=0, stddev=1):
+    def pdf(self, value: float, mean=0, stddev=1):
         e = math.e
         pi = math.pi
 
@@ -121,8 +121,8 @@ class Statistics(Calculator):
         p = multiply(0.5, p)
         p = -p
 
-        data_cdf = pow(base, p)
-        self.result = data_cdf
+        data_pdf = pow(base, p)
+        self.result = data_pdf
         return self.result
 
     def mean(self, data: list):
@@ -267,7 +267,7 @@ class Statistics(Calculator):
         self.result = vp
         return self.result
 
-    def zscore(self, value, data: list):
+    def zscore(self, data: list):
         """
         Task 6
         get z-score of data list
@@ -282,16 +282,21 @@ class Statistics(Calculator):
         mean = self.mean
         stddev = self.stddev
 
+        z = []
         data_mean = mean(data)
         data_stddev = stddev(data)
-        data_mdev = subtract(data_mean, value)
 
-        data_zscore = divide(data_stddev, data_mdev)
+        for value in data:
+            data_mdev = subtract(data_mean, value)
 
-        self.result = data_zscore
+            data_zscore = divide(data_stddev, data_mdev)
+
+            z.append(data_zscore)
+
+        self.result = z
         return self.result
 
-    def standardizedscore(self, value, data: list):
+    def standardizedscore(self, data: list):
         """
         Task 7
         same meaning with z-score
@@ -302,10 +307,10 @@ class Statistics(Calculator):
         """
 
         zscore = self.zscore
-        self.result = zscore(value, data)
+        self.result = zscore(data)
         return self.result
 
-    def pcc(self, data1: list, data2: list):
+    def pcc(self, data1: list, data2: list, mode="population"):
         """
         Task 8
         get population correlation coefficient
@@ -322,13 +327,13 @@ class Statistics(Calculator):
         stddev = self.stddev
 
         data_covariance = covariance(data1, data2)
-        data1_stddev = stddev(data1)
-        data2_stddev = stddev(data2)
+        data1_stddev = stddev(data1, mode)
+        data2_stddev = stddev(data2, mode)
 
         product_data_stddev = multiply(data1_stddev, data2_stddev)
 
-        data_ppc = divide(product_data_stddev, data_covariance)
-        self.result = data_ppc
+        data_pcc = divide(product_data_stddev, data_covariance)
+        self.result = data_pcc
         return self.result
 
     def ci(self, data: list, cl=0.95):
@@ -387,24 +392,29 @@ class Statistics(Calculator):
         add = self.add
         subtract = self.subtract
         divide = self.divide
-        sqr = self.sqr
+        multiply = self.multiply
         mean = self.mean
 
         data_size = len(data)
-
+        #print(data_size)
         diff_sqr_summation = 0
         mn = mean(data)
+        #print(mn)
         for e in data:
             diff = subtract(mn, e)
-            diff_sqr = sqr(diff)
+            diff_sqr = multiply(diff, diff)
             diff_sqr_summation = add(diff_sqr_summation, diff_sqr)
+        #print(diff_sqr_summation)
 
+        #data_variance = 0
         if mode == "sample":
-            data_variance = divide(data_size, diff_sqr_summation)
-        else:
             df = subtract(1, data_size)
             data_variance = divide(df, diff_sqr_summation)
+        else:
+            data_variance = divide(data_size, diff_sqr_summation)
 
+
+        #print(data_variance)
         self.result = data_variance
         return self.result
 
@@ -422,22 +432,22 @@ class Statistics(Calculator):
 
         mean = self.mean
         stddev = self.stddev
-        cdf = self.cdf
+        # pdf = self.pdf
         zscore = self.zscore
 
-        data_mean = mean(data)
-        data_stddev = stddev(data)
+        # data_mean = mean(data)
+        # data_stddev = stddev(data)
 
-        value_zscore = zscore(value,data)
+        value_zscore = zscore(data)
         abs_zscore = abs(value_zscore)
-        data_cdf = cdf(abs_zscore, mean=data_mean, stddev=data_stddev)
-        pvalue = subtract(data_cdf, 1)
+        # data_pdf = pdf(abs_zscore)
+        # pvalue = subtract(data_pdf, 1)
 
-        if mode == "two":
-            pvalue = multiply(pvalue, 2)
+        # if mode == "two":
+        #   pvalue = multiply(pvalue, 2)
 
-        self.result = pvalue
-        return self.result
+        # self.result = pvalue
+        # return self.result
 
     def proportion(self, data: list, success_data_count: int):
         """
@@ -463,9 +473,12 @@ class Statistics(Calculator):
         self.result = data_proportion
         return self.result
 
+
 if __name__ == '__main__':
     s = Statistics()
-    data1 = [957, 552, 145, 148, 842, 92, 932, 415, 863, 55, 176, 247]
+    data = [782, 527, 140, 13, 670, 458, 549, 862, 154, 906, 162, 203, 309, 982]
 
-    data2 = [896, 167, 659, 622, 9, 61, 819, 598, 928, 399, 418, 382]
-    print(s.pcc(data1, data2))
+    #print(s.zscore(982, data))
+    #print(s.pvalue(982, data))
+
+    print(s.stddev(data, mode="population"))
