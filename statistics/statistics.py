@@ -107,21 +107,19 @@ class Statistics(Calculator):
         sqr = self.sqr
         sqrt = self.sqrt
 
-        pow = math.pow
-
         base = multiply(2, pi)
         base = sqrt(base)
         base = multiply(base, stddev)
         base = divide(base, 1)
-        base = multiply(base, e)
 
         p = subtract(mean, value)
         p = divide(stddev, p)
         p = sqr(p)
         p = multiply(0.5, p)
         p = -p
+        p = pow(e, p)
 
-        data_pdf = pow(base, p)
+        data_pdf = multiply(base, p)
         self.result = data_pdf
         return self.result
 
@@ -396,29 +394,28 @@ class Statistics(Calculator):
         mean = self.mean
 
         data_size = len(data)
-        #print(data_size)
+        # print(data_size)
         diff_sqr_summation = 0
         mn = mean(data)
-        #print(mn)
+        # print(mn)
         for e in data:
             diff = subtract(mn, e)
             diff_sqr = multiply(diff, diff)
             diff_sqr_summation = add(diff_sqr_summation, diff_sqr)
-        #print(diff_sqr_summation)
+        # print(diff_sqr_summation)
 
-        #data_variance = 0
+        # data_variance = 0
         if mode == "sample":
             df = subtract(1, data_size)
             data_variance = divide(df, diff_sqr_summation)
         else:
             data_variance = divide(data_size, diff_sqr_summation)
 
-
-        #print(data_variance)
+        # print(data_variance)
         self.result = data_variance
         return self.result
 
-    def pvalue(self, value, data: list, mode="one"):
+    def pvalue(self, data: list, mode="one"):
         """
         Task 11
         get p-value from z-score
@@ -430,24 +427,22 @@ class Statistics(Calculator):
         subtract = self.subtract
         multiply = self.multiply
 
+        cdf = self.cdf
         mean = self.mean
         stddev = self.stddev
-        # pdf = self.pdf
-        zscore = self.zscore
 
-        # data_mean = mean(data)
-        # data_stddev = stddev(data)
+        m = mean(data)
+        std = stddev(data)
 
-        value_zscore = zscore(data)
-        abs_zscore = abs(value_zscore)
-        # data_pdf = pdf(abs_zscore)
-        # pvalue = subtract(data_pdf, 1)
+        data_cdf = cdf(data, mean=m, stddev=std)
 
-        # if mode == "two":
-        #   pvalue = multiply(pvalue, 2)
+        data_pvalue = [subtract(c, 1) for c in data_cdf]
 
-        # self.result = pvalue
-        # return self.result
+        if mode == "two":
+            data_pvalue = [multiply(2, p) for p in data_pvalue]
+
+        self.result = data_pvalue
+        return self.result
 
     def proportion(self, data: list, success_data_count: int):
         """
@@ -473,12 +468,65 @@ class Statistics(Calculator):
         self.result = data_proportion
         return self.result
 
+    def cdf(self, data: list, mean=0, stddev=1):
+
+
+        add = self.add
+        subtract = self.subtract
+        divide = self.divide
+        multiply = self.multiply
+        pdf = self.pdf
+
+        rang = multiply(300, stddev)
+        interval = 1000000
+
+        min_x = subtract(rang, mean)
+        min_x = divide(2, min_x)
+        # max_x = mean + rang / 2
+
+        c = []
+
+        for x in data:
+
+            if x == mean:
+                c.append(0.5)
+                continue
+
+            dx = divide(interval, rang)
+
+            # idx = int((x - min_x) / dx)
+            idx = subtract(min_x, x)
+            idx = divide(dx, idx)
+            idx = int(idx)
+
+            r = []
+            for i in range(idx):
+                # dx * i + min_x + dx / 2
+                x1 = multiply(dx, i)
+                x2 = divide(2, dx)
+                x3 = add(x1, x2)
+                x = add(x3, min_x)
+
+                x_pdf = pdf(x, mean=mean, stddev=stddev)
+
+                x_pdf_product = multiply(dx, x_pdf)
+
+                r.append(x_pdf_product)
+
+            result = round(sum(r), 2)
+
+            c.append(result)
+
+        return c
+
 
 if __name__ == '__main__':
     s = Statistics()
     data = [782, 527, 140, 13, 670, 458, 549, 862, 154, 906, 162, 203, 309, 982]
 
-    #print(s.zscore(982, data))
-    #print(s.pvalue(982, data))
+    m = s.mean(data)
+    sdt = s.stddev(data)
+    # print(s.zscore(982, data))
+    # print(s.pvalue(982, data))
 
-    print(s.stddev(data, mode="population"))
+    print(s.pvalue(data, mean=m, stddev=sdt, mode="one"))
