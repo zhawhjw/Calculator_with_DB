@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.7"
+
+install:
+  - pip install --upgrade pip
+
+# command to run tests
+script:
+  - python ./unit_test/unit_test_calculator.py
+  - python ./unit_test/unit_test_statistics.py
+
+branches:
+  only:
+    - master
+    - statistics-calculator
