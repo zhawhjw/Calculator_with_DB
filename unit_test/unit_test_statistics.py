@@ -49,9 +49,9 @@ class unitTestForStatisticsCalculator(unittest.TestCase):
 
     def testConfidenceInterval(self) -> None:
         value1_index, left_index, right_index, test_data = CSVReader.callCreateCSVReader("ThreeFieldsCSV",
-                                                                              "../csv_files/",
-                                                                              "Unit Test CI.csv"
-                                                                              )
+                                                                                         "../csv_files/",
+                                                                                         "Unit Test CI.csv"
+                                                                                         )
 
         # pprint(test_data)
         # print()
@@ -234,7 +234,7 @@ class unitTestForStatisticsCalculator(unittest.TestCase):
         self.assertEqual(returned_result, result_list)
 
     def testVariancePopulationProportion(self) -> None:
-        value1_index, value2_index ,result_index, test_data = CSVReader.callCreateCSVReader("ThreeFieldsCSV",
+        value1_index, value2_index, result_index, test_data = CSVReader.callCreateCSVReader("ThreeFieldsCSV",
                                                                                             "../csv_files/",
                                                                                             "Unit Test Variance of Population Proportion.csv"
                                                                                             )
@@ -257,17 +257,18 @@ class unitTestForStatisticsCalculator(unittest.TestCase):
         self.assertEqual(returned_result, result)
 
     def testVarianceSampleProportion(self) -> None:
-        value1_index, value2_index ,sample_index, result_index, test_data = CSVReader.callCreateCSVReader("FourFieldsCSV",
-                                                                                            "../csv_files/",
-                                                                                            "Unit Test Variance of Sample Proportion.csv"
-                                                                                            )
+        value1_index, value2_index, sample_index, result_index, test_data = CSVReader.callCreateCSVReader(
+            "FourFieldsCSV",
+            "../csv_files/",
+            "Unit Test Variance of Sample Proportion.csv"
+            )
         value1_list = [float(row[value1_index]) for row in test_data]
         value2_list = [float(row[value2_index]) for row in test_data]
         sample_list = [float(row[sample_index]) for row in test_data]
         result_list = [float(row[result_index]) for row in test_data]
 
         success_count = value2_list[0]
-        #print(success_count)
+        # print(success_count)
         result = result_list[0]
 
         sample_value1_list = []
@@ -283,6 +284,25 @@ class unitTestForStatisticsCalculator(unittest.TestCase):
 
         self.assertEqual(expected, result)
         self.assertEqual(returned_result, result)
+
+    def testPValue(self) -> None:
+        value1_index, result_index, test_data = CSVReader.callCreateCSVReader("TwoFieldsCSV",
+                                                                              "../csv_files/",
+                                                                              "Unit Test P Value.csv"
+                                                                              )
+        value1_list = [float(row[value1_index]) for row in test_data]
+
+        result_list = [float(row[result_index]) for row in test_data]
+
+        print("THIS TAKES A LONG TIME TO RUN!")
+        expected = self.statistics_calculator.pvalue(value1_list)
+        # expected = round(expected, 10)
+
+        returned_result = self.statistics_calculator.result
+        # returned_result = round(returned_result, 10)
+
+        self.assertEqual(expected, result_list)
+        self.assertEqual(returned_result, result_list)
 
 
 if __name__ == '__main__':
