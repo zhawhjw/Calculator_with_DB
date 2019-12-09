@@ -1,7 +1,8 @@
 *.zip
-setup.py
+#setup.py
 data_formatting.py
 __pycache__/
 .idea/
 .pytest_cache/
 .gitignore
+wait-for-postgres.sh
