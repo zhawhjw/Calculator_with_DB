@@ -16,6 +16,11 @@ session = Session()
 
 Base = declarative_base()
 
+print('--------------------------------------------------------------------------')
+print()
+
+print("# Section 1")
+
 
 class Customer(Base):
     __tablename__ = 'customers'
@@ -155,6 +160,12 @@ session.add_all([o1, o2])
 # session.new
 session.commit()
 
+
+print('--------------------------------------------------------------------------')
+print()
+
+print("# Section 2")
+
 o3 = Order(customer_id=c1.id)
 orderline1 = OrderLine(item_id=i1.id, quantity=5)
 orderline2 = OrderLine(item_id=i2.id, quantity=10)
@@ -193,7 +204,7 @@ for ol in c1.orders[2].order_lines:
 print('--------------------------------------------------------------------------')
 print()
 
-print("Section 3")
+print("# Section 3")
 
 session.query(Customer).all()
 
@@ -328,7 +339,7 @@ print(session.query(
 
 print("----------------------------------------------------------------")
 print()
-print("Section 4")
+print("# Section 4")
 
 from sqlalchemy import distinct
 
@@ -342,7 +353,7 @@ print(session.query(
 
 print("----------------------------------------------------------------")
 print()
-print("Section 5")
+print("# Section 5")
 
 from sqlalchemy import cast, Date, distinct, union
 
@@ -355,7 +366,7 @@ print(session.query(
 
 print("----------------------------------------------------------------")
 print()
-print("Section 6")
+print("# Section 6")
 
 s1 = session.query(Item.id, Item.name).filter(Item.name.like("Wa%"))
 s2 = session.query(Item.id, Item.name).filter(Item.name.like("%e%"))
@@ -367,7 +378,7 @@ print(s1.union_all(s2).all())
 
 print("----------------------------------------------------------------")
 print()
-print("Section 7")
+print("# Section 7")
 
 i = session.query(Item).get(8)
 i.selling_price = 25.91
@@ -381,7 +392,7 @@ session.commit()
 
 print("----------------------------------------------------------------")
 print()
-print("Section 8")
+print("# Section 8")
 
 print(session.query(Item).filter(Item.name == 'Monitor').all())
 print(session.query(Item).filter(Item.name == 'Monitor').delete())
@@ -395,7 +406,7 @@ session.commit()
 
 print("----------------------------------------------------------------")
 print()
-print("Section 9")
+print("# Section 9")
 
 from sqlalchemy import text
 
@@ -407,7 +418,7 @@ print(session.query(Customer).filter(text("town like 'Nor%'")).order_by(text("fi
 
 print("----------------------------------------------------------------")
 print()
-print("Section 10")
+print("# Section 10")
 
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
