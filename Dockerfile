@@ -1,7 +1,8 @@
-FROM python:3.6
-
+FROM python:3.7
 ADD . .
 
 RUN pip install --upgrade pip
 
-CMD ["python", "-m", "unittest", "discover", "-s","Tests"]
+RUN pip install -r requirements.txt
+
+CMD ["python", "./database-sql/sql-database.py"]

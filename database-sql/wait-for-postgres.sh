@@ -3,11 +3,11 @@
 
 set -e
 
-host="$1"
+#host="localhost:54320"
 shift
 cmd="$@"
 
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h "$host" -U "postgres" -c '\q'; do
+until PGPASSWORD=pass psql -h "db" -p 5432 -U "postgres" -c '\q'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done

@@ -1,11 +1,15 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Numeric, ForeignKey, SmallInteger, or_, and_, \
     not_
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine("postgresql://postgres:pass@localhost:54320/mydb")
+# engine = create_engine("postgresql://postgres:pass@localhost:54320/mydb")
+# engine = create_engine("postgresql://postgres:pass@db:5432/mydb")
+
+engine = create_engine('sqlite:///foo.db?check_same_thread=False', echo=True)
+
 Session = sessionmaker(bind=engine)
 
 session = Session()
@@ -301,11 +305,11 @@ print(session.query(
 )
 
 
-print(session.query(
-    Customer.first_name,
-    Order.id,
-).outerjoin(Order, full=True).all()
-)
+#print(session.query(
+#    Customer.first_name,
+#    Order.id,
+#).outerjoin(Order, full=True).all()
+#)
 
 from sqlalchemy import func
 
@@ -343,10 +347,10 @@ print("Section 5")
 from sqlalchemy import cast, Date, distinct, union
 
 print(session.query(
-    cast(func.pi(), Integer),
-    cast(func.pi(), Numeric(10, 2)),
-    cast("2019-12-07", DateTime),
-    cast("2019-12-07", Date),
+    cast(3, Integer),
+    cast(3.14, Numeric(10, 2)),
+    #date('now'),
+    #cast(datetime.now(), Date),
 ).all())
 
 print("----------------------------------------------------------------")
@@ -379,9 +383,9 @@ print("----------------------------------------------------------------")
 print()
 print("Section 8")
 
-i = session.query(Item).filter(Item.name == 'Monitor').one()
-print(i)
-print(session.delete(i))
+print(session.query(Item).filter(Item.name == 'Monitor').all())
+print(session.query(Item).filter(Item.name == 'Monitor').delete())
+
 session.commit()
 
 print(session.query(Item).filter(
